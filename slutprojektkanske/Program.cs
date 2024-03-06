@@ -20,7 +20,7 @@ int PlayerY = 400;
 while (!Raylib.WindowShouldClose())
 {
     // to be moved if can 1
-   if (Scene=="Cavern"){
+
 
     Rectangle Border1 = new(0, 0, 1200, 100);
     Rectangle Border2 = new(1000, 100, 200, 150);
@@ -125,6 +125,8 @@ void levels()
     Rectangle Border5 = new(1050, 500, 150, 400);
     Rectangle NewArea1 = new(1135, 150, 65, 450);
     Rectangle Player = new(PlayerX, PlayerY, 100, 100);
+    Rectangle Goblingo = new(200,200,150,150);
+    Rectangle Ghoul=new(400,400,90,90);
     Raylib.DrawRectangleRec(Player, Color.Black);
     Raylib.ClearBackground(Color.RayWhite);
 
@@ -140,8 +142,10 @@ void levels()
     }
     if (Scene == "ExitFromCavern")
     {
+        Raylib.DrawRectangleRec(Goblingo,Color.DarkGreen);
+        Raylib.DrawRectangleRec(Ghoul,Color.SkyBlue);
 
-
+     
 
 
 
@@ -153,4 +157,3 @@ void levels()
 //Rectanglecreation.Creating();
 //Methods.Collision();
 //Moving.Move();
-
