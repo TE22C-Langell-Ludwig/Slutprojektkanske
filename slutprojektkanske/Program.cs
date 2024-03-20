@@ -13,23 +13,15 @@ Vector2 VectorBackground = new(0, 0);
 
 Raylib.InitWindow(1200, 900, "The Thing");
 Raylib.SetTargetFPS(60);
-// to be moved1
-
-
-// to be moved2
-
+// dem 4 bilderna jag har lagt till i spelet
 Texture2D Scene1 = Raylib.LoadTexture("Cavern.png");
 Texture2D Scene2 = Raylib.LoadTexture("ExitFromCavern.png");
 Texture2D BoreLeftTexture = Raylib.LoadTexture("Bore.png");
 Texture2D BoreRightTexture = Raylib.LoadTexture("BoarRight.png");
+
+// Själva Main delen där koden är
 while (!Raylib.WindowShouldClose())
 {
-    // to be moved if can 1
-
-    /*
-    Console.WriteLine(PlayerY);
-    Console.WriteLine(PlayerX);
-    */
     Vector2 PlayerVector = new(100, 100);
     Rectangle Border1 = new(0, 0, 1200, 100);
     Rectangle Border2 = new(1000, 100, 200, 150);
@@ -41,9 +33,6 @@ while (!Raylib.WindowShouldClose())
 
     Rectangle CaveEntrance = new(10, 400, 100, 100);
 
-
-    // to be moved if can 2
-
     Rectangle Background = new(0, 0, 1200, 900);
 
     Raylib.BeginDrawing();
@@ -51,22 +40,16 @@ while (!Raylib.WindowShouldClose())
     if (Scene == "Cavern")
     {
         Raylib.DrawTextureRec(Scene1, Background, VectorBackground, Color.White);
-        // to be moved if can 1
         levels();
-        // to be moved if can2
     }
     if (Scene == "ExitFromCavern")
     {
         Raylib.DrawTextureRec(Scene2, Background, VectorBackground, Color.White);
-        // to be moved if can 1
         levels();
-        // to be moved if can2
     }
     Raylib.EndDrawing();
 
-    int PlayerSpd = 10;
-
-
+    int PlayerSpd = 3+Lives;
     if (Raylib.IsKeyDown(KeyboardKey.D))
     {
         PlayerX += PlayerSpd;
@@ -129,15 +112,13 @@ while (!Raylib.WindowShouldClose())
 }
 
 
-
-
-/*Console.WriteLine($"{PlayerY}");
-   Console.WriteLine($"{PlayerX}");*/
-
+// Koden för levlar och vad som ska ritas 
 void levels()
 {
     if (GameOver == false)
     {
+        int GoblingoY=200;
+        int GhoulY=400;
         Vector2 PlayerVector = new(PlayerX, PlayerY);
         Rectangle Border1 = new(0, 0, 1200, 100);
         Rectangle Border2 = new(1000, 100, 200, 150);
@@ -146,19 +127,16 @@ void levels()
         Rectangle Border5 = new(1050, 500, 150, 400);
         Rectangle CaveExit = new(1135, 150, 65, 450);
         Rectangle Player = new(PlayerX, PlayerY, 100, 100);
-        Rectangle Goblingo = new(200, 200, 150, 150);
-        Rectangle Ghoul = new(400, 400, 90, 90);
+        Rectangle Goblingo = new(200, GoblingoY, 150, 150);
+        Rectangle Ghoul = new(400, GhoulY, 90, 90);
         Rectangle CaveEntrance = new(10, 400, 100, 100);
-        if (Lives >= 3)
-        {
+        if (Lives >= 3){
             Raylib.DrawCircle(170, 100, 20, Color.Red);
         }
-        if (Lives >= 2)
-        {
+        if (Lives >= 2){
             Raylib.DrawCircle(110, 100, 20, Color.Red);
         }
-        if (Lives >= 1)
-        {
+        if (Lives >= 1){
             Raylib.DrawCircle(50, 100, 20, Color.Red);
         }
 
@@ -187,6 +165,12 @@ void levels()
             Raylib.DrawRectangleRec(Goblingo, Color.DarkGreen);
             Raylib.DrawRectangleRec(Ghoul, Color.SkyBlue);
             Raylib.DrawRectangleRec(CaveEntrance, Color.Blank);
+            
+
+
+
+
+
             for (int i = 0; i < 5; i++)
             {
                 Raylib.DrawCircle(900, 150 + 110 * i, 30, Color.DarkBlue);
@@ -198,6 +182,17 @@ void levels()
                 PlayerX = 520;
                 PlayerY = 400;
                 if (Raylib.CheckCollisionRecs(Ghoul, Player) == true && Lives <= 0)
+                {
+                    GameOver=true;
+                }
+            }
+            if (Raylib.CheckCollisionRecs(Goblingo, Player) == true)
+            {
+                Lives=Lives-2;
+                Scene = "Cavern";
+                PlayerX = 520;
+                PlayerY = 400;
+                if (Raylib.CheckCollisionRecs(Goblingo, Player) == true && Lives <= 0)
                 {
                     GameOver=true;
                 }
@@ -222,6 +217,3 @@ void levels()
     }
 
 }
-//Rectanglecreation.Creating();
-//Methods.Collision();
-//Moving.Move();
