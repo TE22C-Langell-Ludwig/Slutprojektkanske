@@ -5,7 +5,9 @@ using Raylib_cs;
 string Scene = "Cavern";
 int PlayerX = 520;
 int PlayerY = 400;
-bool Direction=true;
+int Lives = 3;
+bool Direction = true;
+bool GameOver = false;
 Vector2 VectorBackground = new(0, 0);
 //Vector2 PlayerVector= new(PlayerX,PlayerY);
 
@@ -24,11 +26,11 @@ while (!Raylib.WindowShouldClose())
 {
     // to be moved if can 1
 
-/*
-Console.WriteLine(PlayerY);
-Console.WriteLine(PlayerX);
-*/
-    Vector2 PlayerVector= new(100,100);
+    /*
+    Console.WriteLine(PlayerY);
+    Console.WriteLine(PlayerX);
+    */
+    Vector2 PlayerVector = new(100, 100);
     Rectangle Border1 = new(0, 0, 1200, 100);
     Rectangle Border2 = new(1000, 100, 200, 150);
     Rectangle Border3 = new(0, 100, 150, 1100);
@@ -37,7 +39,7 @@ Console.WriteLine(PlayerX);
     Rectangle CaveExit = new(1135, 150, 65, 450);
     Rectangle Player = new(PlayerX, PlayerY, 100, 100);
 
-    Rectangle CaveEntrance=new(10,400,100,100);
+    Rectangle CaveEntrance = new(10, 400, 100, 100);
 
 
     // to be moved if can 2
@@ -62,19 +64,18 @@ Console.WriteLine(PlayerX);
     }
     Raylib.EndDrawing();
 
-    // to be moved1
-    int PlayerSpd = 4;
+    int PlayerSpd = 10;
 
 
     if (Raylib.IsKeyDown(KeyboardKey.D))
     {
         PlayerX += PlayerSpd;
-        Direction=false;
+        Direction = false;
     }
     if (Raylib.IsKeyDown(KeyboardKey.A))
     {
         PlayerX -= PlayerSpd;
-        Direction=true;
+        Direction = true;
     }
     if (Raylib.IsKeyDown(KeyboardKey.W))
     {
@@ -84,33 +85,34 @@ Console.WriteLine(PlayerX);
     {
         PlayerY += PlayerSpd;
     }
-   
-   if (Scene=="Cavern"){
-    if (Raylib.CheckCollisionRecs(Player, Border1))
+
+    if (Scene == "Cavern")
     {
-        PlayerX = 520;
-        PlayerY = 400;
-    }
-    if (Raylib.CheckCollisionRecs(Player, Border2))
-    {
-        PlayerX = 520;
-        PlayerY = 400;
-    }
-    if (Raylib.CheckCollisionRecs(Player, Border3))
-    {
-        PlayerX = 520;
-        PlayerY = 400;
-    }
-    if (Raylib.CheckCollisionRecs(Player, Border4))
-    {
-        PlayerX = 520;
-        PlayerY = 400;
-    }
-    if (Raylib.CheckCollisionRecs(Player, Border5))
-    {
-        PlayerX = 520;
-        PlayerY = 400;
-    }
+        if (Raylib.CheckCollisionRecs(Player, Border1))
+        {
+            PlayerX = 520;
+            PlayerY = 400;
+        }
+        if (Raylib.CheckCollisionRecs(Player, Border2))
+        {
+            PlayerX = 520;
+            PlayerY = 400;
+        }
+        if (Raylib.CheckCollisionRecs(Player, Border3))
+        {
+            PlayerX = 520;
+            PlayerY = 400;
+        }
+        if (Raylib.CheckCollisionRecs(Player, Border4))
+        {
+            PlayerX = 520;
+            PlayerY = 400;
+        }
+        if (Raylib.CheckCollisionRecs(Player, Border5))
+        {
+            PlayerX = 520;
+            PlayerY = 400;
+        }
     }
     if (Raylib.CheckCollisionRecs(Player, CaveExit))
     {
@@ -124,7 +126,6 @@ Console.WriteLine(PlayerX);
         PlayerX = 1000;
         PlayerY = 340;
     }
-    // to be moved2
 }
 
 
@@ -135,52 +136,89 @@ Console.WriteLine(PlayerX);
 
 void levels()
 {
-    Vector2 PlayerVector= new(PlayerX,PlayerY);
-    Rectangle Border1 = new(0, 0, 1200, 100);
-    Rectangle Border2 = new(1000, 100, 200, 150);
-    Rectangle Border3 = new(0, 100, 150, 1100);
-    Rectangle Border4 = new(150, 710, 1040, 190);
-    Rectangle Border5 = new(1050, 500, 150, 400);
-    Rectangle CaveExit = new(1135, 150, 65, 450);
-    Rectangle Player = new(PlayerX, PlayerY, 100, 100);
-    Rectangle Goblingo = new(200,200,150,150);
-    Rectangle Ghoul=new(400,400,90,90);
-    Rectangle CaveEntrance=new(10,400,100,100);
-
-    Raylib.DrawRectangleRec(Player, Color.Blank);
-    Raylib.ClearBackground(Color.RayWhite);
-    if (Direction==true){
-    Raylib.DrawTextureV(BoreLeftTexture,PlayerVector,Color.RayWhite);
-    }
-    if (Direction==false){
-    Raylib.DrawTextureV(BoreRightTexture,PlayerVector,Color.RayWhite);
-    }
-
-    if (Scene == "Cavern")
+    if (GameOver == false)
     {
-        Raylib.DrawRectangleRec(Border1, Color.Blank);
-        Raylib.DrawRectangleRec(Border2, Color.Blank);
-        Raylib.DrawRectangleRec(Border3, Color.Blank);
-        Raylib.DrawRectangleRec(Border4, Color.Blank);
-        Raylib.DrawRectangleRec(Border5, Color.Blank);
-        Raylib.DrawRectangleRec(CaveExit, Color.Blank);
-    }
-    if (Scene == "ExitFromCavern")
-    {
-        Raylib.DrawRectangleRec(Goblingo,Color.DarkGreen);
-        Raylib.DrawRectangleRec(Ghoul,Color.SkyBlue);
-        Raylib.DrawRectangleRec(CaveEntrance,Color.Blank);
-        for (int i = 0; i < 5; i++)
+        Vector2 PlayerVector = new(PlayerX, PlayerY);
+        Rectangle Border1 = new(0, 0, 1200, 100);
+        Rectangle Border2 = new(1000, 100, 200, 150);
+        Rectangle Border3 = new(0, 100, 150, 1100);
+        Rectangle Border4 = new(150, 710, 1040, 190);
+        Rectangle Border5 = new(1050, 500, 150, 400);
+        Rectangle CaveExit = new(1135, 150, 65, 450);
+        Rectangle Player = new(PlayerX, PlayerY, 100, 100);
+        Rectangle Goblingo = new(200, 200, 150, 150);
+        Rectangle Ghoul = new(400, 400, 90, 90);
+        Rectangle CaveEntrance = new(10, 400, 100, 100);
+        if (Lives >= 3)
         {
-            Raylib.DrawCircle(900,150+110*i,30,Color.DarkBlue);
+            Raylib.DrawCircle(170, 100, 20, Color.Red);
+        }
+        if (Lives >= 2)
+        {
+            Raylib.DrawCircle(110, 100, 20, Color.Red);
+        }
+        if (Lives >= 1)
+        {
+            Raylib.DrawCircle(50, 100, 20, Color.Red);
         }
 
-     
+        Raylib.DrawRectangleRec(Player, Color.Blank);
+        Raylib.ClearBackground(Color.RayWhite);
+        if (Direction == true)
+        {
+            Raylib.DrawTextureV(BoreLeftTexture, PlayerVector, Color.RayWhite);
+        }
+        if (Direction == false)
+        {
+            Raylib.DrawTextureV(BoreRightTexture, PlayerVector, Color.RayWhite);
+        }
+
+        if (Scene == "Cavern")
+        {
+            Raylib.DrawRectangleRec(Border1, Color.Blank);
+            Raylib.DrawRectangleRec(Border2, Color.Blank);
+            Raylib.DrawRectangleRec(Border3, Color.Blank);
+            Raylib.DrawRectangleRec(Border4, Color.Blank);
+            Raylib.DrawRectangleRec(Border5, Color.Blank);
+            Raylib.DrawRectangleRec(CaveExit, Color.Blank);
+        }
+        if (Scene == "ExitFromCavern")
+        {
+            Raylib.DrawRectangleRec(Goblingo, Color.DarkGreen);
+            Raylib.DrawRectangleRec(Ghoul, Color.SkyBlue);
+            Raylib.DrawRectangleRec(CaveEntrance, Color.Blank);
+            for (int i = 0; i < 5; i++)
+            {
+                Raylib.DrawCircle(900, 150 + 110 * i, 30, Color.DarkBlue);
+            }
+            if (Raylib.CheckCollisionRecs(Ghoul, Player) == true)
+            {
+                Lives--;
+                Scene = "Cavern";
+                PlayerX = 520;
+                PlayerY = 400;
+                if (Raylib.CheckCollisionRecs(Ghoul, Player) == true && Lives <= 0)
+                {
+                    GameOver=true;
+                }
+            }
 
 
-
-
-
+        }
+    }
+    else if (GameOver == true)
+    {
+        Raylib.ClearBackground(Color.White);
+        Raylib.DrawText("You died", 500, 280, 45, Color.RayWhite);
+        Raylib.DrawText("Start Again?(Press Q)", 400, 380, 30, Color.RayWhite);
+        if (Raylib.IsKeyPressed(KeyboardKey.Q))
+        {
+            Lives = 3;
+            Scene = "Cavern";
+            PlayerX = 520;
+            PlayerY = 400;
+            GameOver=false;
+        }
     }
 
 }
