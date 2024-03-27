@@ -13,7 +13,8 @@ den ska sluta generera blåbär genom att blåbär koden ska ha en del som check
 behöver fixa hur blåbären är genererade först
 */
 
+/*
+for loop som har en lista av border namnen och har list[i] för att checka collision med player rectangle
 
-
-
+*/
 
