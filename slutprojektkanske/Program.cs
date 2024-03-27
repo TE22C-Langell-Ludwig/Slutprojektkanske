@@ -19,6 +19,18 @@ Texture2D Scene2 = Raylib.LoadTexture("ExitFromCavern.png");
 Texture2D BoreLeftTexture = Raylib.LoadTexture("Bore.png");
 Texture2D BoreRightTexture = Raylib.LoadTexture("BoarRight.png");
 
+
+
+int F = Random.Shared.Next(-500, 500);
+int G = Random.Shared.Next(-500, 500);
+int GhoulY = 400;
+int GoblingoY = 200;
+int Ghoulmovementmultiplier = -1;
+int Goblingomovementmultiplier =-1;
+int blåbär=0;
+
+
+
 // Själva Main delen där koden är
 while (!Raylib.WindowShouldClose())
 {
@@ -39,12 +51,12 @@ while (!Raylib.WindowShouldClose())
     if (Scene == "Cavern")
     {
         Raylib.DrawTextureRec(Scene1, Background, VectorBackground, Color.White);
-        levels();
+        levels(F, G);
     }
     if (Scene == "ExitFromCavern")
     {
         Raylib.DrawTextureRec(Scene2, Background, VectorBackground, Color.White);
-        levels();
+        levels(F, G);
     }
     Raylib.EndDrawing();
 
@@ -81,11 +93,14 @@ while (!Raylib.WindowShouldClose())
             }
         }
     }
-    if (Raylib.CheckCollisionRecs(Player, CaveExit))
+    if (Scene == "Cavern" && Raylib.CheckCollisionRecs(Player, CaveExit))
     {
         Scene = "ExitFromCavern";
         PlayerX = 130;
         PlayerY = 400;
+        GhoulY=400;
+        GoblingoY=200;
+
     }
     if (Raylib.CheckCollisionRecs(Player, CaveEntrance))
     {
@@ -97,12 +112,14 @@ while (!Raylib.WindowShouldClose())
 
 
 // Koden för levlar och vad som ska ritas 
-void levels()
+
+
+F = Random.Shared.Next(-500, 500);
+G = Random.Shared.Next(-500, 500);
+int levels(int F, int G)
 {
     if (GameOver == false)
     {
-        int GoblingoY = 200;
-        int GhoulY = 400;
         Vector2 PlayerVector = new(PlayerX, PlayerY);
         Rectangle Border1 = new(0, 0, 1200, 100);
         Rectangle Border2 = new(1000, 100, 200, 150);
@@ -113,8 +130,32 @@ void levels()
         Rectangle Areaup = new(350, 0, 300, 50);
         Rectangle AreaRight = new(1160, 250, 40, 250);
         Rectangle Player = new(PlayerX, PlayerY, 100, 100);
-        Rectangle Goblingo = new(200, GoblingoY, 150, 150);
+        Rectangle Goblingo = new(800, GoblingoY, 150, 150);
         Rectangle Ghoul = new(400, GhoulY, 90, 90);
+
+        GhoulY += (4 * Ghoulmovementmultiplier);
+        if (GhoulY > 700)
+        {
+            Ghoulmovementmultiplier = -1;
+            GhoulY += (4 * Ghoulmovementmultiplier);
+        }
+        else if (GhoulY < 150)
+        {
+            Ghoulmovementmultiplier = 1;
+            GhoulY += (4 * Ghoulmovementmultiplier);
+        }
+        
+        GoblingoY += (2 * Goblingomovementmultiplier);
+        if (GoblingoY > 600)
+        {
+            Goblingomovementmultiplier = -1;
+            GoblingoY += (2 * Goblingomovementmultiplier);
+        }
+        else if (GoblingoY < 150)
+        {
+            Goblingomovementmultiplier = 1;
+            GoblingoY += (2 * Goblingomovementmultiplier);
+        }
         Rectangle CaveEntrance = new(10, 400, 100, 100);
         if (Lives >= 3)
         {
@@ -128,9 +169,10 @@ void levels()
         {
             Raylib.DrawCircle(50, 100, 20, Color.Red);
         }
-
+        Raylib.DrawText($"{blåbär}/3 Blåbär hämtade",800,800,30,Color.Blue);
         Raylib.DrawRectangleRec(Player, Color.Blank);
         Raylib.ClearBackground(Color.RayWhite);
+        //ändrar vilken bild som ritas beroende på en bool som ändras när jag går vänster eller höger
         if (Direction == true)
         {
             Raylib.DrawTextureV(BoreLeftTexture, PlayerVector, Color.RayWhite);
@@ -156,23 +198,24 @@ void levels()
             Raylib.DrawRectangleRec(CaveEntrance, Color.Blank);
             Raylib.DrawRectangleRec(AreaRight, Color.Red);
             Raylib.DrawRectangleRec(Areaup, Color.Red);
+            Vector2 BlåbärVector(500+F,500+G);
+            Raylib.DrawCircleV(BlåbärVector, 30, Color.DarkBlue)
 
 
 
-
-//int E = Random.Shared.Next(1,500);
-int F = Random.Shared.Next(-500,500);
-int G = Random.Shared.Next(-500,500);
-            for (int i = 0; i < 5; i++)
-            {
-                Raylib.DrawCircle(500+F, 500+G, 30, Color.DarkBlue);
-            }
+                
             if (Raylib.CheckCollisionRecs(Ghoul, Player) == true)
             {
                 Lives--;
+                F = Random.Shared.Next(-500, 500);
+                G = Random.Shared.Next(-500, 500);
                 Scene = "Cavern";
                 PlayerX = 520;
                 PlayerY = 400;
+                GhoulY=400;
+                GoblingoY=200;
+
+
                 if (Raylib.CheckCollisionRecs(Ghoul, Player) == true && Lives <= 0)
                 {
                     GameOver = true;
@@ -181,9 +224,15 @@ int G = Random.Shared.Next(-500,500);
             if (Raylib.CheckCollisionRecs(Goblingo, Player) == true)
             {
                 Lives = Lives - 2;
+                F = Random.Shared.Next(-500, 500);
+                G = Random.Shared.Next(-500, 500);
                 Scene = "Cavern";
                 PlayerX = 520;
                 PlayerY = 400;
+                GoblingoY=200;
+                GhoulY=400;
+
+
                 if (Raylib.CheckCollisionRecs(Goblingo, Player) == true && Lives <= 0)
                 {
                     GameOver = true;
@@ -207,5 +256,5 @@ int G = Random.Shared.Next(-500,500);
             GameOver = false;
         }
     }
-
+    return (2);
 }
