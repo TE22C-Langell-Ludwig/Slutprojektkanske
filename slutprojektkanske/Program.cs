@@ -51,12 +51,12 @@ while (!Raylib.WindowShouldClose())
     if (Scene == "Cavern")
     {
         Raylib.DrawTextureRec(Scene1, Background, VectorBackground, Color.White);
-        levels(F, G);
+        levels();
     }
     if (Scene == "ExitFromCavern")
     {
         Raylib.DrawTextureRec(Scene2, Background, VectorBackground, Color.White);
-        levels(F, G);
+        levels();
     }
     Raylib.EndDrawing();
 
@@ -116,8 +116,7 @@ while (!Raylib.WindowShouldClose())
 
 F = Random.Shared.Next(-500, 500);
 G = Random.Shared.Next(-500, 500);
-int levels(int F, int G)
-{
+void levels(){
     if (GameOver == false)
     {
         Vector2 PlayerVector = new(PlayerX, PlayerY);
@@ -131,6 +130,7 @@ int levels(int F, int G)
         Rectangle AreaRight = new(1160, 250, 40, 250);
         Rectangle Player = new(PlayerX, PlayerY, 100, 100);
         Rectangle Goblingo = new(800, GoblingoY, 150, 150);
+        Vector2 Blåbärvector= new(F+ 500,G + 500);
         Rectangle Ghoul = new(400, GhoulY, 90, 90);
 
         GhoulY += (4 * Ghoulmovementmultiplier);
@@ -169,7 +169,7 @@ int levels(int F, int G)
         {
             Raylib.DrawCircle(50, 100, 20, Color.Red);
         }
-        Raylib.DrawText($"{blåbär}/3 Blåbär hämtade",800,800,30,Color.Blue);
+        Raylib.DrawText($"{blåbär}/3 Blåbär hämtade",800,750,30,Color.Blue);
         Raylib.DrawRectangleRec(Player, Color.Blank);
         Raylib.ClearBackground(Color.RayWhite);
         //ändrar vilken bild som ritas beroende på en bool som ändras när jag går vänster eller höger
@@ -198,17 +198,33 @@ int levels(int F, int G)
             Raylib.DrawRectangleRec(CaveEntrance, Color.Blank);
             Raylib.DrawRectangleRec(AreaRight, Color.Red);
             Raylib.DrawRectangleRec(Areaup, Color.Red);
-            Vector2 BlåbärVector(500+F,500+G);
-            Raylib.DrawCircleV(BlåbärVector, 30, Color.DarkBlue)
 
 
 
-                
+                Raylib.DrawCircleV(Blåbärvector,30,Color.DarkBlue);
+
+if (Raylib.CheckCollisionCircleRec(Blåbärvector,30,Player)){
+
+F = Random.Shared.Next(-500, 500);
+G = Random.Shared.Next(-460, 350);
+
+blåbär++;
+
+}
+if (Raylib.CheckCollisionCircleRec(Blåbärvector,30,CaveExit)){
+    
+F = Random.Shared.Next(-500, 500);
+G = Random.Shared.Next(-460, 350);
+
+}
+                //Raylib.DrawCircle(500 + F, 500 + G, 30, Color.DarkBlue);
+
+
             if (Raylib.CheckCollisionRecs(Ghoul, Player) == true)
             {
                 Lives--;
                 F = Random.Shared.Next(-500, 500);
-                G = Random.Shared.Next(-500, 500);
+                G = Random.Shared.Next(-460, 350);
                 Scene = "Cavern";
                 PlayerX = 520;
                 PlayerY = 400;
@@ -225,7 +241,7 @@ int levels(int F, int G)
             {
                 Lives = Lives - 2;
                 F = Random.Shared.Next(-500, 500);
-                G = Random.Shared.Next(-500, 500);
+                G = Random.Shared.Next(-480, 350);
                 Scene = "Cavern";
                 PlayerX = 520;
                 PlayerY = 400;
@@ -250,11 +266,12 @@ int levels(int F, int G)
         if (Raylib.IsKeyPressed(KeyboardKey.Q))
         {
             Lives = 3;
+            blåbär=0;
             Scene = "Cavern";
             PlayerX = 520;
             PlayerY = 400;
             GameOver = false;
         }
     }
-    return (2);
-}
+    
+    }
