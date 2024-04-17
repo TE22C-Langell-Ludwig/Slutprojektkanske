@@ -9,7 +9,6 @@ int Lives = 3;
 bool Direction = true;
 bool GameOver = false;
 Vector2 VectorBackground = new(0, 0);
-//Vector2 PlayerVector= new(PlayerX,PlayerY);
 
 Raylib.InitWindow(1200, 900, "The Thing");
 Raylib.SetTargetFPS(60);
@@ -43,9 +42,11 @@ while (!Raylib.WindowShouldClose())
     Rectangle CaveExit = new(1135, 150, 65, 450);
     Rectangle Player = new(PlayerX, PlayerY, 100, 100);
     Rectangle CaveEntrance = new(10, 400, 100, 100);
+    Rectangle Pileofhay = new(360, 290, 90, 90);
     Rectangle Background = new(0, 0, 1200, 900);
-
+//börjar rita
     Raylib.BeginDrawing();
+    //kollar vilken scene som ska köras
     if (Scene == "Intro")
     {
         levels();
@@ -65,7 +66,7 @@ while (!Raylib.WindowShouldClose())
         levels();
     }
     Raylib.EndDrawing();
-
+// kod så spelaren så kunna gå och också göra så att spelaren movespeed är baserat delvis på hens health
     int PlayerSpd = 3 + Lives;
     if (Raylib.IsKeyDown(KeyboardKey.D))
     {
@@ -85,7 +86,7 @@ while (!Raylib.WindowShouldClose())
     {
         PlayerY += PlayerSpd;
     }
-
+ // for loop för att checka collsion mellan varje border i grotan som checkar via att kolla genom en 
     if (Scene == "Cavern")
     {
         Rectangle[] Borders = { Border1, Border2, Border3, Border4, Border5 };
@@ -99,6 +100,7 @@ while (!Raylib.WindowShouldClose())
             }
         }
     }
+    //kollar så spelaren kan lämna grotan och fienderna är på rätt plats när dem gör det
     if (Scene == "Cavern" && Raylib.CheckCollisionRecs(Player, CaveExit))
     {
         Scene = "ExitFromCavern";
@@ -108,19 +110,27 @@ while (!Raylib.WindowShouldClose())
         GoblingoY = 200;
 
     }
+    //kollar så spelaren kan gå tillbaka in i grottan
     if (Raylib.CheckCollisionRecs(Player, CaveEntrance))
     {
         Scene = "Cavern";
         PlayerX = 1000;
         PlayerY = 340;
     }
+    //gör så efter man har plockat alla 3 blåbär och är i grottan att man kan nå högen av hö och vinna
+    if (Raylib.CheckCollisionRecs(Pileofhay, Player) && Blueberries == 3 && Scene == "Cavern")
+    {
+        PlayerX = 400;
+        PlayerY = 350;
+        Scene = "Sleepytime";
+    }
 }
 
 
 // Koden för levlar och vad som ska ritas 
-
 void levels()
 {
+    //kollar att man inte har dött så spelet vet vad den ska rita
     if (GameOver == false)
     {
         Vector2 PlayerVector = new(PlayerX, PlayerY);
@@ -134,9 +144,12 @@ void levels()
         Rectangle Goblingo = new(800, GoblingoY, 150, 150);
         Rectangle Ghoul = new(400, GhoulY, 90, 90);
         Rectangle Pileofhay = new(360, 290, 90, 90);
-        Rectangle TheOutside = new (-10,-10,1220,920);
+        Rectangle TheOutside = new(-10, -10, 1220, 920);
         Vector2 Blueberriesvector = new(X + 500, Y + 500);
+        Rectangle CaveEntrance = new(10, 400, 100, 100);
 
+
+        //fiendernas movement
         GhoulY += (4 * Ghoulmovementmultiplier);
         if (GhoulY > 700)
         {
@@ -161,9 +174,9 @@ void levels()
             GoblingoY += (2 * Goblingomovementmultiplier);
         }
 
-        Rectangle CaveEntrance = new(10, 400, 100, 100);
-        if (Scene != "Intro")
+        if (Scene != "Intro" && Scene != "SleepyTime")
         {
+            //ritar up health pointsen i vänster top hörnet och huden som säger hur många blåbär man har hittat so far
             if (Lives >= 3)
             {
                 Raylib.DrawCircle(170, 100, 20, Color.Red);
@@ -190,23 +203,10 @@ void levels()
                 Raylib.DrawTextureV(BoreRightTexture, PlayerVector, Color.RayWhite);
             }
         }
+        //ritar up så intro sequences finns
         if (Scene == "Intro")
         {
-
-            Raylib.DrawText("You are a boar.", 500, 320, 30, Color.DarkBrown);
-            Raylib.DrawText("Collect 3 Blueberries.", 500, 370, 30, Color.DarkBrown);
-            Raylib.DrawText("Then you can go to sleep.", 500, 420, 30, Color.DarkBrown);
-            Raylib.DrawText("Dont get lost outside your cave.", 500, 470, 30, Color.DarkBrown);
-            Raylib.DrawText("Press F to start.", 500, 520, 30, Color.DarkBrown);
-
-            Raylib.DrawText("Controls", 150, 300, 30, Color.DarkBrown);
-            Raylib.DrawText("W - Move up", 150, 350, 30, Color.DarkBrown);
-            Raylib.DrawText("A - Move left", 150, 400, 30, Color.DarkBrown);
-            Raylib.DrawText("S - Move down", 150, 450, 30, Color.DarkBrown);
-            Raylib.DrawText("D - Move right", 150, 500, 30, Color.DarkBrown);
-
-
-
+            IntroText();
             if (Raylib.IsKeyPressed(KeyboardKey.F))
             {
                 Scene = "Cavern";
@@ -224,13 +224,13 @@ void levels()
             if (Blueberries == 3)
             {
                 Raylib.DrawRectangleRec(Pileofhay, Color.Yellow);
-                if (Raylib.CheckCollisionRecs(Pileofhay, Player))
-                {
-                    Scene = "Sleepytime";
-                }
+                /* if (Raylib.CheckCollisionRecs(Pileofhay, Player))
+                 {
+                     Scene = "Sleepytime";
+                 }*/
             }
         }
-        if (Scene == "ExitFromCavern")
+        else if (Scene == "ExitFromCavern")
         {
             Raylib.DrawRectangleRec(Goblingo, Color.DarkGreen);
             Raylib.DrawRectangleRec(Ghoul, Color.SkyBlue);
@@ -295,12 +295,13 @@ void levels()
                     GameOver = true;
                 }
             }
-            if (Raylib.CheckCollisionRecs(TheOutside,Player) == false){
-                GameOver=true;
+            if (Raylib.CheckCollisionRecs(TheOutside, Player) == false)
+            {
+                GameOver = true;
             }
 
         }
-        if (Scene == "Sleepytime")
+        else if (Scene == "Sleepytime")
         {
             Raylib.DrawText("the boar has now gone to sleep", 200, 200, 20, Color.DarkBrown);
             Raylib.DrawText("thank you for helping him get his food.", 200, 250, 20, Color.DarkBrown);
@@ -325,5 +326,20 @@ void levels()
             GameOver = false;
         }
     }
+
+}
+static void IntroText()
+{
+    Raylib.DrawText("You are a boar.", 500, 320, 30, Color.DarkBrown);
+    Raylib.DrawText("Collect 3 Blueberries.", 500, 370, 30, Color.DarkBrown);
+    Raylib.DrawText("Then you can go to sleep.", 500, 420, 30, Color.DarkBrown);
+    Raylib.DrawText("Dont get lost outside your cave.", 500, 470, 30, Color.DarkBrown);
+    Raylib.DrawText("Press F to start.", 500, 520, 30, Color.DarkBrown);
+
+    Raylib.DrawText("Controls", 150, 300, 30, Color.DarkBrown);
+    Raylib.DrawText("W - Move up", 150, 350, 30, Color.DarkBrown);
+    Raylib.DrawText("A - Move left", 150, 400, 30, Color.DarkBrown);
+    Raylib.DrawText("S - Move down", 150, 450, 30, Color.DarkBrown);
+    Raylib.DrawText("D - Move right", 150, 500, 30, Color.DarkBrown);
 
 }
